@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian Online Fisika XII - Listrik Statis & Listrik Dinamis | SMA St. Thomas 1 Medan</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Tone.js untuk efek suara peringatan pelanggaran -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+        /* Anti-seleksi teks & anti-drag saat ujian berlangsung */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        /* Print styles untuk halaman hasil evaluasi */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+            }
+            .print-shadow-none {
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1 !important;
+            }
+            .print-break-inside-avoid {
+                break-inside: avoid;
+            }
+            #solutions-section {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- ==================== 1. HALAMAN PENDAFTARAN / MULAI UJIAN ==================== -->
+    <div id="start-screen" class="flex-1 flex items-center justify-center p-4 sm:p-6">
+        <div class="max-w-2xl w-full bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+            <!-- Header Banner Sekolah & Mata Pelajaran -->
+            <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 p-6 sm:p-8 text-white">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-xs font-bold uppercase tracking-wider">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        CBT Strict Anti-Cheat
+                    </span>
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-300 bg-amber-500/15 border border-amber-400/30 px-3 py-1 rounded-full">
+                        SMA St. Thomas 1 Medan
+                    </span>
+                </div>
+
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Evaluasi Fisika SMA Kelas XII</h1>
+                <p class="text-blue-100 mt-1 text-sm sm:text-base font-medium">Materi: Listrik Statis & Listrik Dinamis</p>
+                <p class="text-blue-300 text-xs sm:text-sm mt-1">Guru Mata Pelajaran: <strong class="text-white">Ibu Fetriana Simanihuruk</strong></p>
+
+                <div class="grid grid-cols-3 gap-3 mt-6 pt-5 border-t border-white/15 text-center">
+                    <div class="bg-white/10 rounded-xl p-2.5">
+                        <div class="text-xs text-blue-200">Jumlah Soal</div>
+                        <div class="text-lg font-bold">30 PG (A–E)</div>
+                    </div>
+                    <div class="bg-white/10 rounded-xl p-2.5">
+                        <div class="text-xs text-blue-200">Durasi Waktu</div>
+                        <div class="text-lg font-bold">90 Menit</div>
+                    </div>
+                    <div class="bg-white/10 rounded-xl p-2.5">
+                        <div class="text-xs text-blue-200">Level Soal</div>
+                        <div class="text-lg font-bold">Mudah – HOTS</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Identitas & Tata Tertib -->
+            <form id="start-form" class="p-6 sm:p-8 space-y-5">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="sm:col-span-3">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nama Lengkap Siswa <span class="text-red-500">*</span></label>
+                        <input type="text" id="student-name" required placeholder="Masukkan nama lengkap Anda" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition text-slate-800">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Kelas <span class="text-red-500">*</span></label>
+                        <input type="text" id="student-class" required placeholder="Contoh: XII IPA 3" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">No. Absen <span class="text-red-500">*</span></label>
+                        <input type="number" id="student-absen" required min="1" max="60" placeholder="11" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition text-slate-800">
+                    </div>
+                </div>
+
+                <!-- Pengaturan Pengacakan -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2.5">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500">Pengaturan Keamanan Soal</div>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="shuffle-options" checked class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                        <span class="text-sm text-slate-700">Acak urutan pilihan jawaban (A, B, C, D, E) secara konsisten</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="shuffle-questions" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                        <span class="text-sm text-slate-700">Acak urutan nomor soal (Jika tidak dicentang, soal berjenjang dari No. 1–10 Mudah, 11–20 Sedang, 21–30 Sulit/HOTS)</span>
+                    </label>
+                </div>
+
+                <!-- Peringatan Tata Tertib Anti-Kecurangan -->
+                <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+                    <div class="flex items-center gap-2 text-red-800 font-bold text-sm mb-2">
+                        <svg class="w-5 h-5 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        ATURAN KETAT ANTI-KECURANGAN (WAJIB DIPATUHI)
+                    </div>
+                    <ul class="text-xs text-red-700 space-y-1.5 list-disc pl-5 leading-relaxed">
+                        <li>Ujian wajib berjalan dalam <strong>Mode Layar Penuh (Fullscreen)</strong> sejak tombol mulai ditekan.</li>
+                        <li><strong>Dilarang keras</strong> menekan tombol ESC / keluar dari fullscreen, berpindah tab browser, membuka aplikasi lain, atau meminimalkan jendela.</li>
+                        <li>Klik kanan, seleksi/drag teks, copy-paste, dan pintasan keyboard (F12, Ctrl+Shift+I/J/C, Ctrl+U/S/P/C/V/X, PrintScreen) diblokir sepenuhnya.</li>
+                        <li>Batas toleransi maksimal adalah <strong>3 kali pelanggaran</strong>. Pada pelanggaran ke-3, ujian <strong>OTOMATIS TERKUNCI & DIKUMPULKAN</strong>.</li>
+                    </ul>
+                </div>
+
+                <label class="flex items-start gap-3 cursor-pointer pt-1">
+                    <input type="checkbox" id="agree-rules" required class="mt-1 w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                    <span class="text-sm text-slate-700 font-medium">Saya siap mengerjakan evaluasi ini dengan jujur dan mematuhi seluruh tata tertib pengawasan sistem.</span>
+                </label>
+
+                <button type="submit" class="w-full py-3.5 px-6 bg-blue-800 hover:bg-blue-900 active:scale-[0.99] text-white font-bold rounded-xl shadow-lg shadow-blue-800/30 transition flex items-center justify-center gap-2 text-base">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Masuk Layar Penuh & Mulai Ujian (90 Menit)
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== 2. HALAMAN UJIAN AKTIF ==================== -->
+    <div id="exam-screen" class="hidden flex-1 flex flex-col no-select">
+        <!-- Top Navbar -->
+        <header class="bg-slate-900 text-white sticky top-0 z-30 shadow-md border-b border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-700 flex items-center justify-center font-extrabold text-lg shadow-inner border border-blue-500/40">⚡</div>
+                    <div>
+                        <div class="font-bold text-sm sm:text-base leading-tight" id="nav-student-info">Peserta Ujian</div>
+                        <div class="text-xs text-slate-400">SMA St. Thomas 1 Medan • Listrik Statis & Dinamis</div>
+                    </div>
+                </div>
+
+                <!-- Status Pelanggaran & Timer -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <!-- Indikator Pelanggaran -->
+                    <div id="strike-badge" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs sm:text-sm font-semibold">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        <span>Pelanggaran: <strong id="strike-count">0</strong>/3</span>
+                    </div>
+
+                    <!-- Timer -->
+                    <div id="timer-box" class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 font-mono text-base sm:text-lg font-bold text-amber-400">
+                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span id="timer-display">90:00</span>
+                    </div>
+
+                    <!-- Tombol Kumpulkan -->
+                    <button type="button" onclick="openConfirmSubmitModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow transition">
+                        Selesai & Kumpulkan
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Konten Utama Ujian -->
+        <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <!-- Panel Soal (Kiri - 8 Kolom) -->
+            <div class="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-8 flex flex-col justify-between min-h-[500px]">
+                <div>
+                    <!-- Header Soal: Nomor, Tingkat Kesulitan, Materi -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
+                        <div class="flex items-center gap-2.5">
+                            <span class="px-3.5 py-1.5 rounded-xl bg-blue-900 text-white font-bold text-sm">
+                                Soal No. <span id="current-q-num">1</span> <span class="text-blue-300 font-normal">/ 30</span>
+                            </span>
+                            <span id="difficulty-badge" class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide bg-emerald-100 text-emerald-800">
+                                Mudah
+                            </span>
+                        </div>
+                        <span id="topic-badge" class="text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1 rounded-lg">
+                            Listrik Statis
+                        </span>
+                    </div>
+
+                    <!-- Teks Pertanyaan -->
+                    <div id="question-text" class="text-base sm:text-lg text-slate-800 font-medium leading-relaxed mb-6">
+                        Memuat soal...
+                    </div>
+
+                    <!-- Daftar Pilihan Jawaban -->
+                    <div id="options-container" class="space-y-3">
+                        <!-- Diisi oleh JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Navigasi Bawah Soal -->
+                <div class="mt-8 pt-5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                    <button type="button" id="btn-prev" onclick="prevQuestion()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-sm flex items-center gap-1.5 disabled:opacity-40 disabled:pointer-events-none transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        Sebelumnya
+                    </button>
+
+                    <button type="button" id="btn-doubt" onclick="toggleDoubt()" class="px-4 py-2.5 rounded-xl border border-amber-400 bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-sm flex items-center gap-2 transition">
+                        <span id="doubt-checkbox-icon" class="w-4 h-4 rounded border border-amber-500 flex items-center justify-center bg-white"></span>
+                        Ragu-Ragu
+                    </button>
+
+                    <button type="button" id="btn-next" onclick="nextQuestion()" class="px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-semibold text-sm flex items-center gap-1.5 transition">
+                        Selanjutnya
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Panel Navigasi Nomor (Kanan - 4 Kolom) -->
+            <div class="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sticky top-20">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Navigasi Nomor Soal</h2>
+                    <span class="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg">
+                        Terjawab: <span id="answered-counter">0</span>/30
+                    </span>
+                </div>
+
+                <!-- Grid 30 Nomor -->
+                <div id="question-grid" class="grid grid-cols-5 sm:grid-cols-6 lg:grid-cols-5 gap-2 mb-5">
+                    <!-- Diisi oleh JavaScript -->
+                </div>
+
+                <!-- Legenda Status -->
+                <div class="border-t border-slate-100 pt-4 space-y-2 text-xs text-slate-600">
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-emerald-600 inline-block"></span>
+                        <span>Sudah Dijawab</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-amber-400 inline-block"></span>
+                        <span>Ragu-Ragu</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded bg-slate-100 border border-slate-300 inline-block"></span>
+                        <span>Belum Dijawab</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded ring-2 ring-blue-600 bg-white inline-block"></span>
+                        <span>Soal Sedang Dibuka</span>
+                    </div>
+                </div>
+
+                <!-- Info Konstanta Fisika -->
+                <div class="mt-4 pt-4 border-t border-slate-100 bg-slate-50 rounded-xl p-3 text-xs text-slate-600 space-y-1">
+                    <div class="font-bold text-slate-700 mb-1">Tetapan Fisika Umum:</div>
+                    <div>• k = 9 × 10<sup>9</sup> N·m²/C²</div>
+                    <div>• ε₀ = 8,85 × 10<sup>-12</sup> C²/(N·m²)</div>
+                    <div>• e = 1,6 × 10<sup>-19</sup> C; g = 10 m/s²</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ==================== 3. HALAMAN LAPORAN HASIL EVALUASI & PEMBAHASAN ==================== -->
+    <div id="result-screen" class="hidden flex-1 max-w-5xl w-full mx-auto p-4 sm:p-8 space-y-6">
+        <!-- Kartu Ringkasan Nilai (Format Resmi SMA St. Thomas 1 Medan) -->
+        <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden print-shadow-none">
+            <div id="result-header-banner" class="bg-gradient-to-r from-blue-950 via-blue-900 to-slate-900 p-6 sm:p-8 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-amber-300 mb-1">SMA ST. THOMAS 1 MEDAN</div>
+                    <h1 class="text-xl sm:text-2xl font-extrabold uppercase tracking-tight">Hasil Evaluasi Fisika SMA Kelas XII</h1>
+                    <p class="text-blue-200 text-sm mt-1">Materi: <strong>Listrik Statis dan Listrik Dinamis</strong></p>
+                    <p class="text-blue-300 text-xs mt-0.5">Guru Mata Pelajaran: <strong>Ibu Fetriana Simanihuruk</strong></p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 text-center min-w-[165px]">
+                    <div class="text-[11px] uppercase tracking-wider text-blue-200 font-bold">Nilai Akhir Siswa</div>
+                    <div id="final-score" class="text-4xl sm:text-5xl font-black text-white mt-1">0</div>
+                    <div id="final-predicate" class="text-xs font-bold mt-1.5 px-2.5 py-0.5 rounded-full bg-white/20 text-white inline-block">
+                        Predikat: -
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 sm:p-8 space-y-6">
+                <!-- Identitas Siswa & Status Ujian -->
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200 text-sm">
+                    <div>
+                        <span class="text-slate-500 block text-xs">Nama Lengkap</span>
+                        <strong id="res-name" class="text-slate-900">-</strong>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block text-xs">Kelas / No. Absen</span>
+                        <strong id="res-class-absen" class="text-slate-900">-</strong>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block text-xs">Waktu Selesai</span>
+                        <strong id="res-time" class="text-slate-900">-</strong>
+                    </div>
+                    <div>
+                        <span class="text-slate-500 block text-xs">Status Ujian</span>
+                        <span id="result-status-text" class="font-bold text-emerald-700">Tuntas & Terverifikasi</span>
+                    </div>
+                </div>
+
+                <!-- Statistik Jawaban Utama -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                    <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+                        <div class="text-2xl font-extrabold text-emerald-700" id="res-correct">0</div>
+                        <div class="text-xs font-semibold text-emerald-800 uppercase mt-1">Jawaban Benar</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-red-50 border border-red-200">
+                        <div class="text-2xl font-extrabold text-red-700" id="res-wrong">0</div>
+                        <div class="text-xs font-semibold text-red-800 uppercase mt-1">Jawaban Salah</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-100 border border-slate-200">
+                        <div class="text-2xl font-extrabold text-slate-700" id="res-empty">0</div>
+                        <div class="text-xs font-semibold text-slate-600 uppercase mt-1">Tidak Dijawab</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-amber-50 border border-amber-200">
+                        <div class="text-2xl font-extrabold text-amber-700" id="res-violations">0</div>
+                        <div class="text-xs font-semibold text-amber-800 uppercase mt-1">Pelanggaran Sistem</div>
+                    </div>
+                </div>
+
+                <!-- Analisis Penguasaan Materi per Level Soal -->
+                <div class="rounded-xl border border-slate-200 p-4 sm:p-5 bg-white">
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3">Analisis Penguasaan Materi per Level Soal</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200 flex items-center justify-between">
+                            <div>
+                                <div class="text-xs font-bold text-emerald-800">Level Mudah (No. 1–10)</div>
+                                <div class="text-[11px] text-emerald-600">Konsep Dasar Listrik Statis & DC</div>
+                            </div>
+                            <div class="text-lg font-black text-emerald-800"><span id="lvl-easy-score">0</span>/10</div>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 flex items-center justify-between">
+                            <div>
+                                <div class="text-xs font-bold text-amber-800">Level Sedang (No. 11–20)</div>
+                                <div class="text-[11px] text-amber-600">Aplikasi Kapasitor, Kirchhoff & Daya</div>
+                            </div>
+                            <div class="text-lg font-black text-amber-800"><span id="lvl-medium-score">0</span>/10</div>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-rose-50/70 border border-rose-200 flex items-center justify-between">
+                            <div>
+                                <div class="text-xs font-bold text-rose-800">Level Sulit/HOTS (No. 21–30)</div>
+                                <div class="text-[11px] text-rose-600">Analisis Loop Majemuk & Dielektrik</div>
+                            </div>
+                            <div class="text-lg font-black text-rose-800"><span id="lvl-hard-score">0</span>/10</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Log Pelanggaran Anti-Cheat -->
+                <div id="violation-log-box" class="rounded-xl border border-slate-200 p-4 bg-slate-50">
+                    <h3 class="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                        Catatan Integritas & Riwayat Pengawasan Sistem
+                    </h3>
+                    <div id="violation-log-list" class="text-xs text-slate-600 space-y-1">
+                        <p class="text-emerald-700 font-medium">✓ Tidak ada pelanggaran terdeteksi selama ujian berlangsung.</p>
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi Hasil -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-2 no-print">
+                    <button type="button" onclick="toggleSolutions()" id="btn-toggle-solutions" class="px-5 py-3 rounded-xl bg-blue-800 hover:bg-blue-900 text-white font-bold text-sm shadow transition flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        Tampilkan Kunci Jawaban & Pembahasan Lengkap
+                    </button>
+
+                    <button type="button" onclick="window.print()" class="px-5 py-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm transition flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                        Cetak / Simpan PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kontainer Review Jawaban & Pembahasan Lengkap (Tersembunyi awalnya di layar, muncul saat diklik atau dicetak) -->
+        <div id="solutions-section" class="hidden space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-300 pb-2">
+                <h2 class="text-xl font-extrabold text-slate-900">Review Jawaban & Pembahasan Lengkap (30 Soal)</h2>
+                <span class="text-xs text-slate-500">Disusun sesuai urutan soal yang dikerjakan</span>
+            </div>
+            <div id="solutions-list" class="space-y-4">
+                <!-- Diisi oleh JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL PERINGATAN PELANGGARAN (ANTI-CHEAT) ==================== -->
+    <div id="violation-modal" class="hidden fixed inset-0 z-50 bg-red-950/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-2xl shadow-2xl border-4 border-red-600 overflow-hidden">
+            <div class="bg-red-600 p-5 text-white text-center">
+                <div class="w-14 h-14 rounded-full bg-white/20 mx-auto flex items-center justify-center mb-2">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+                <h3 class="text-xl font-black uppercase tracking-wide">PERINGATAN PELANGGARAN!</h3>
+                <p class="text-red-100 text-xs mt-1">Pelanggaran ke-<span id="modal-strike-num" class="font-bold underline">1</span> dari maksimal 3 kali</p>
+            </div>
+            <div class="p-6 text-center space-y-4">
+                <p id="violation-reason-text" class="text-slate-800 font-semibold text-sm leading-relaxed">
+                    Sistem mendeteksi aktivitas yang dilarang selama ujian berlangsung.
+                </p>
+                <div class="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-700">
+                    Peringatan Keras: Pada <strong>pelanggaran ke-3</strong>, sistem akan langsung mengunci layar dan mengumpulkan ujian Anda secara paksa!
+                </div>
+                <button type="button" onclick="acknowledgeViolation()" class="w-full py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow transition">
+                    Kembali ke Layar Penuh & Lanjutkan Ujian
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL KONFIRMASI KUMPULKAN UJIAN ==================== -->
+    <div id="confirm-submit-modal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-2xl shadow-2xl border border-slate-200 p-6 space-y-4">
+            <h3 class="text-lg font-extrabold text-slate-900">Konfirmasi Pengumpulan Ujian</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+                Apakah Anda yakin ingin mengakhiri ujian dan mengumpulkan semua jawaban sekarang? Setelah dikumpulkan, jawaban tidak dapat diubah kembali.
+            </p>
+            <div id="unanswered-warning" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800 font-medium">
+                Perhatian: Masih terdapat <strong id="modal-unanswered-count">0</strong> soal yang belum dijawab atau ditandai ragu-ragu.
+            </div>
+            <div class="flex items-center justify-end gap-3 pt-2">
+                <button type="button" onclick="closeConfirmSubmitModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-sm">
+                    Batal, Periksa Lagi
+                </button>
+                <button type="button" onclick="finishExam('NORMAL')" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow">
+                    Ya, Kumpulkan Sekarang
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL NOTIFIKASI BLOKIR AKSI (PENGGANTI ALERT) ==================== -->
+    <div id="info-modal" class="hidden fixed inset-0 z-50 bg-slate-900/70 flex items-center justify-center p-4">
+        <div class="bg-white max-w-sm w-full rounded-2xl shadow-xl p-6 text-center space-y-4 border border-slate-200">
+            <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 mx-auto flex items-center justify-center font-extrabold text-xl">!</div>
+            <h4 class="font-bold text-slate-900 text-base" id="info-modal-title">Akses Diblokir Sistem</h4>
+            <p class="text-sm text-slate-600" id="info-modal-msg">Tindakan ini tidak diizinkan selama ujian berlangsung.</p>
+            <button type="button" onclick="closeInfoModal()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-sm transition">Mengerti</button>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // 1. BANK SOAL FISIKA KELAS XII (30 SOAL: LISTRIK STATIS & LISTRIK DINAMIS)
+        //    No. 1-10  : Level Mudah
+        //    No. 11-20 : Level Sedang
+        //    No. 21-30 : Level Sulit / HOTS
+        // =========================================================================
+        const RAW_QUESTIONS = [
+            // ==================== LEVEL MUDAH (NO. 1 - 10) ====================
+            {
+                id: 1,
+                difficulty: "Mudah",
+                levelKey: "easy",
+                topic: "Konsep Dasar Muatan Listrik",
+                question: "Sebuah batang kaca digosok dengan kain sutera sehingga batang kaca bermuatan listrik positif. Peristiwa perpindahan partikel yang terjadi pada proses penggosokan tersebut adalah...",
+                options: [
+                    "Elektron berpindah dari batang kaca ke kain sutera",
+                    "Proton berpindah dari kain sutera ke batang kaca",
+                    "Elektron berpindah dari kain sutera ke batang kaca",
+                    "Proton berpindah dari batang kaca ke kain sutera",
+                    "Neutron berpindah dari batang kaca ke kain sutera"
+                ],
+                correctIndex: 0,
+                explanation: "Muatan listrik terjadi akibat perpindahan elektron (proton terikat kuat di dalam inti atom). Saat kaca digosok kain sutera, elektron dari batang kaca berpindah ke kain sutera sehingga kaca kekurangan elektron (bermuatan positif) dan kain sutera kelebihan elektron (bermuatan negatif)."
+            },
+            {
+                id: 2,
+                difficulty: "Mudah",
+                levelKey: "easy",
+                topic: "Hukum Coulomb Dua Muatan Titik",
+                question: "Dua buah muatan listrik titik masing-masing sebesar +4 μC dan −6 μC terpisah pada jarak 3 cm di udara (k = 9 × 10<sup>9</sup> N·m²/C²). Besar dan sifat gaya Coulomb yang bekerja di antara kedua muatan tersebut adalah...",
+                options: [
+                    "240 N, tarik-menarik",
+                    "240 N, tolak-menolak",
+                    "72 N, tarik-menarik",
+                    "72 N, tolak-menolak",
+                    "24 N, tarik-menarik"
+                ],
+                correctIndex: 0,
+                explanation: "Diketahui: q₁ = 4 × 10<sup>-6</sup> C, q₂ = 6 × 10<sup>-6</sup> C, r = 3 cm = 3 × 10<sup>-2</sup> m.<br>F = k · |q₁ · q₂| / r² = (9 × 10<sup>9</sup> × 4 × 10<sup>-6</sup> × 6 × 10<sup>-6</sup>) / (9 × 10<sup>-4</sup>) = 24 × 10<sup>-3</sup> / 10<sup>-4</sup> = 240 N.<br>Karena muatannya berlawanan jenis (+ dan −), gaya yang terjadi bersifat tarik-menarik."
+            },
+            {
+                id: 3,
+                difficulty: "Mudah",
+                levelKey: "easy",
+                topic: "Kuat Medan Listrik",
+                question: "Sebuah muatan sumber Q = +5 μC diletakkan di udara. Besar kuat medan listrik pada suatu titik P yang berjarak 30 cm dari muatan sumber tersebut adalah... (k = 9 × 10<sup>9</sup> N·m²/C²)",
+                options: [
+                    "5 × 10<sup>5</sup> N/C",
+                    "1,5 × 10<sup>5</sup> N/C",
+                    "5 × 10<sup>4</sup> N/C",
+                    "4,5 × 10<sup>5</sup> N/C",
+                    "1,5 × 10<sup>6</sup> N/C"
+                ],
+                correctIndex: 0,
+                explanation: "Diketahui: Q = 5 × 10<sup>-6</sup> C, r = 30 cm = 0,3 m (r² = 0,09 = 9 × 10<sup>-2</sup> m²).<br>E = k · Q / r² = (9 × 10<sup>9</sup> × 5 × 10<sup>-6</sup>) / (9 × 10<sup>-2</sup>) = 5 × 10<sup>5</sup> N/C."
+            },
+            {
+                id: 4,
+                difficulty: "Mudah",
+                levelKey: "easy",
+                topic: "Garis Gaya Listrik",
+                question: "Pernyataan berikut yang PALING TEPAT mengenai sifat garis-garis gaya listrik di sekitar muatan listrik adalah...",
+                options: [
+                    "Keluar dari muatan positif menuju muatan negatif dan tidak pernah berpotongan",
+                    "Keluar dari muatan negatif menuju muatan positif dan saling berpotongan",
+                    "Selalu membentuk lingkaran tertutup di sekitar muatan titik",
+                    "Kerapatan garis gaya tidak dipengaruhi oleh besar kecilnya muatan",
+                    "Arah garis gaya listrik selalu tegak lurus terhadap arah gaya Coulomb pada muatan uji positif"
+                ],
+                correctIndex: 0,
+                explanation: "Garis gaya listrik selalu berawal (keluar) dari muatan positif dan berakhir (masuk) pada muatan negatif, tidak pernah saling berpotongan, serta kerapatannya sebanding dengan kuat medan listrik."
+            },
+            {
+                id: 5,
+                difficulty: "Mudah",
+                levelKey: "easy",
+                topic: "Potensial Listrik Dasar",
+                question: "Sebuah titik A berjarak 20 cm dari muatan titik Q = −4 μC. Besar potensial listrik di titik A adalah... (k = 9 × 10<sup>9</sup> N·m²/C²)",
+                options: [
+                    "−1,8 × 10<sup>5</sup> V",
+                    "+1,8 × 10<sup>5</sup> V",
+                    "−9,0 × 10<sup>5</sup> V",
+                    "+9,0 × 10<sup>4</sup> V",
+                    "−3,6 × 10<sup>4</sup> V"
+                ],
+                correctIndex: 0,
+                explanation: "Potensial listrik adalah besaran skalar sehingga tanda muatan dimasukkan dalam perhitungan.<br>V = k · Q / r = (9 × 10<sup>9</sup> × (−4 × 10<sup>-6</sup>)) / 0,2 = −36 × 10<sup>3</sup> / 0,2 = −1,8 × 10<sup>5</sup> Volt."
+            },
+            {
+                id: 6,
+                difficulty: "Mudah",
+                levelKey: "easy",
+                topic: "Konsep Arus Listrik Searah (DC)",
+                question: "Dalam suatu kawat penghantar mengalir arus listrik searah tetap sebesar 2,4 A selama 5 menit. Jumlah muatan listrik total yang melewati penampang kawat tersebut adalah...",
+                options: [
+                    "720 C",
+                    "12 C",
+                    "480 C",
+                    "144 C",
+                    "1.200 C"
+                ],
+                correctIndex: 0,
+                explanation: "Diketahui: I = 2,4 A, t = 5 menit = 5 × 60 = 300 sekon.<br>Muatan listrik Q = I × t = 2,4 × 300 = 720 Coulomb."
+            },
+            {
+                id: 7,
+                difficulty: "Mudah",
+                levelKey: "easy",
+                topic: "Hukum Ohm",
+                question: "Sebuah resistor murni dihubungkan dengan sumber tegangan DC 12 V sehingga mengalir arus listrik sebesar 0,4 A. Jika tegangan sumber dinaikkan menjadi 30 V pada suhu tetap, kuat arus yang mengalir pada resistor menjadi...",
+                options: [
+                    "1,0 A",
+                    "0,8 A",
+                    "1,2 A",
+                    "0,16 A",
+                    "2,5 A"
+                ],
+                correctIndex: 0,
+                explanation: "Hambatan resistor R = V₁ / I₁ = 12 / 0,4 = 30 Ω.<br>Ketika V₂ = 30 V, maka I₂ = V₂ / R = 30 / 30 = 1,0 A."
+            },
+            {
+                id: 8,
+                difficulty: "Mudah",
+                levelKey: "easy",
+                topic: "Hambatan Jenis Kawat",
+                question: "Sepotong kawat penghantar memiliki panjang <i>L</i>, luas penampang <i>A</i>, dan hambatan listrik <i>R</i>. Jika kawat tersebut diganti dengan kawat sejenis yang panjangnya 2<i>L</i> dan luas penampangnya ½<i>A</i>, maka hambatan kawat yang baru menjadi...",
+                options: [
+                    "4 R",
+                    "2 R",
+                    "R",
+                    "½ R",
+                    "¼ R"
+                ],
+                correctIndex: 0,
+                explanation: "Rumus hambatan kawat: R = ρ · L / A.<br>R₂ / R₁ = (L₂ / L₁) × (A₁ / A₂) = (2L / L) × (A / 0,5A) = 2 × 2 = 4. Jadi R₂ = 4R."
+            },
+            {
+                id: 9,
+                difficulty: "Mudah",
+                levelKey: "easy",
+                topic: "Rangkaian Seri dan Paralel Resistor",
+                question: "Dua buah resistor masing-masing bernilai 6 Ω dan 3 Ω dirangkai secara paralel, kemudian dihubungkan secara seri dengan sebuah resistor 4 Ω. Besar hambatan pengganti total rangkaian tersebut adalah...",
+                options: [
+                    "6 Ω",
+                    "13 Ω",
+                    "2 Ω",
+                    "9 Ω",
+                    "5 Ω"
+                ],
+                correctIndex: 0,
+                explanation: "1) Hambatan paralel (6 Ω dan 3 Ω): R<sub>p</sub> = (6 × 3) / (6 + 3) = 18 / 9 = 2 Ω.<br>2) Diseri dengan 4 Ω: R<sub>total</sub> = R<sub>p</sub> + 4 = 2 + 4 = 6 Ω."
+            },
+            {
+                id: 10,
+                difficulty: "Mudah",
+                levelKey: "easy",
+                topic: "Alat Ukur Amperemeter & Voltmeter",
+                question: "Cara pemasangan amperemeter dan voltmeter yang benar dalam suatu rangkaian listrik untuk mengukur kuat arus yang melewati lampu dan beda potensial pada ujung-ujung lampu berturut-turut adalah...",
+                options: [
+                    "Amperemeter dipasang seri dengan lampu, sedangkan voltmeter dipasang paralel dengan lampu",
+                    "Amperemeter dipasang paralel dengan lampu, sedangkan voltmeter dipasang seri dengan lampu",
+                    "Keduanya dipasang seri dengan lampu",
+                    "Keduanya dipasang paralel dengan lampu",
+                    "Amperemeter dipasang paralel dengan baterai, sedangkan voltmeter dipasang seri dengan sakelar"
+                ],
+                correctIndex: 0,
+                explanation: "Amperemeter memiliki hambatan dalam sangat kecil sehingga harus dipasang SERI agar seluruh arus melewati alat ukur tanpa mengubah arus rangkaian. Voltmeter memiliki hambatan dalam sangat besar sehingga harus dipasang PARALEL pada komponen yang diukur tegangannya."
+            },
+
+            // ==================== LEVEL SEDANG (NO. 11 - 20) ====================
+            {
+                id: 11,
+                difficulty: "Sedang",
+                levelKey: "medium",
+                topic: "Resultan Gaya Coulomb Segaris",
+                question: "Tiga buah muatan titik terletak segaris pada sumbu-X: q₁ = +2 μC di x = 0 cm, q₂ = −3 μC di x = 30 cm, dan q₃ = +4 μC di x = 60 cm. Besar gaya Coulomb resultan yang dialami oleh muatan q₂ adalah... (k = 9 × 10<sup>9</sup> N·m²/C²)",
+                options: [
+                    "0,6 N",
+                    "1,8 N",
+                    "1,2 N",
+                    "2,4 N",
+                    "0,3 N"
+                ],
+                correctIndex: 0,
+                explanation: "Jarak r₁₂ = 30 cm = 0,3 m, dan r₂₃ = 30 cm = 0,3 m.<br>• F₂₁ (tarik-menarik ke kiri): k·q₁·q₂ / r₁₂² = (9×10<sup>9</sup> × 2×10<sup>-6</sup> × 3×10<sup>-6</sup>) / 0,09 = 0,6 N (ke kiri).<br>• F₂₃ (tarik-menarik ke kanan): k·q₂·q₃ / r₂₃² = (9×10<sup>9</sup> × 3×10<sup>-6</sup> × 4×10<sup>-6</sup>) / 0,09 = 1,2 N (ke kanan).<br>• Resultan F₂ = 1,2 − 0,6 = 0,6 N (ke kanan)."
+            },
+            {
+                id: 12,
+                difficulty: "Sedang",
+                levelKey: "medium",
+                topic: "Letak Titik Medan Listrik Nol",
+                question: "Dua buah muatan titik q<sub>A</sub> = +4 μC dan q<sub>B</sub> = +16 μC terpisah pada jarak 12 cm. Letak suatu titik P yang memiliki kuat medan listrik resultan bernilai nol berada pada jarak...",
+                options: [
+                    "4 cm dari muatan q<sub>A</sub> dan 8 cm dari muatan q<sub>B</sub>",
+                    "8 cm dari muatan q<sub>A</sub> dan 4 cm dari muatan q<sub>B</sub>",
+                    "6 cm dari muatan q<sub>A</sub> dan 6 cm dari muatan q<sub>B</sub>",
+                    "4 cm di sebelah kiri muatan q<sub>A</sub>",
+                    "12 cm di sebelah kiri muatan q<sub>A</sub>"
+                ],
+                correctIndex: 0,
+                explanation: "Karena kedua muatan sejenis (+ dan +), titik dengan E = 0 berada DI ANTARA kedua muatan dan lebih dekat ke muatan yang lebih kecil (q<sub>A</sub>).<br>Misal jarak dari q<sub>A</sub> adalah x, maka jarak dari q<sub>B</sub> adalah (12 − x).<br>E<sub>A</sub> = E<sub>B</sub> → q<sub>A</sub> / x² = q<sub>B</sub> / (12 − x)² → 4 / x² = 16 / (12 − x)².<br>Akarkan kedua ruas: 2 / x = 4 / (12 − x) → 4x = 24 − 2x → 6x = 24 → x = 4 cm dari q<sub>A</sub> (dan 8 cm dari q<sub>B</sub>)."
+            },
+            {
+                id: 13,
+                difficulty: "Sedang",
+                levelKey: "medium",
+                topic: "Energi Potensial & Usaha Listrik",
+                question: "Untuk memindahkan muatan uji positif sebesar +2 μC dari titik K yang berpotensial +150 V ke titik L yang berpotensial +400 V diperlukan usaha luar sebesar...",
+                options: [
+                    "5,0 × 10<sup>-4</sup> J",
+                    "2,5 × 10<sup>-4</sup> J",
+                    "1,1 × 10<sup>-3</sup> J",
+                    "5,0 × 10<sup>-2</sup> J",
+                    "3,0 × 10<sup>-4</sup> J"
+                ],
+                correctIndex: 0,
+                explanation: "Usaha untuk memindahkan muatan q dari K ke L:<br>W<sub>KL</sub> = q · (V<sub>L</sub> − V<sub>K</sub>) = (2 × 10<sup>-6</sup> C) × (400 V − 150 V) = (2 × 10<sup>-6</sup>) × 250 = 500 × 10<sup>-6</sup> = 5,0 × 10<sup>-4</sup> Joule."
+            },
+            {
+                id: 14,
+                difficulty: "Sedang",
+                levelKey: "medium",
+                topic: "Kapasitor Keping Sejajar",
+                question: "Sebuah kapasitor keping sejajar di udara memiliki kapasitas <i>C</i>. Jika luas tiap keping diperbesar menjadi 3 kali semula dan jarak antar kedua keping diperkecil menjadi ½ kali semula, maka kapasitas kapasitor tersebut menjadi...",
+                options: [
+                    "6 C",
+                    "1,5 C",
+                    "3 C",
+                    "⅔ C",
+                    "⅙ C"
+                ],
+                correctIndex: 0,
+                explanation: "Kapasitas kapasitor keping sejajar: C = ε₀ · A / d.<br>C' / C = (A' / A) × (d / d') = (3 / 1) × (1 / 0,5) = 3 × 2 = 6. Maka C' = 6C."
+            },
+            {
+                id: 15,
+                difficulty: "Sedang",
+                levelKey: "medium",
+                topic: "Rangkaian Seri-Paralel Kapasitor",
+                question: "Dua buah kapasitor masing-masing 6 μF dan 3 μF dirangkai secara seri, lalu rangkaian tersebut dihubungkan dengan sumber tegangan DC 24 V. Besar muatan listrik yang tersimpan pada kapasitor 6 μF adalah...",
+                options: [
+                    "48 μC",
+                    "144 μC",
+                    "72 μC",
+                    "24 μC",
+                    "96 μC"
+                ],
+                correctIndex: 0,
+                explanation: "1) Kapasitas total seri: 1/C<sub>s</sub> = 1/6 + 1/3 = 3/6 → C<sub>s</sub> = 2 μF.<br>2) Muatan total: Q<sub>total</sub> = C<sub>s</sub> × V = 2 μF × 24 V = 48 μC.<br>3) Pada rangkaian seri kapasitor, muatan pada setiap kapasitor sama dengan muatan total, sehingga Q₁ = 48 μC."
+            },
+            {
+                id: 16,
+                difficulty: "Sedang",
+                levelKey: "medium",
+                topic: "Hukum I Kirchhoff",
+                question: "Pada suatu titik percabangan rangkaian listrik arus searah, terdapat arus masuk I₁ = 5 A dan I₂ = 3 A, sedangkan arus yang keluar dari percabangan tersebut adalah I₃ = 2,5 A, I₄ = 1,5 A, dan sisanya mengalir melalui cabang I₅. Besar kuat arus I₅ adalah...",
+                options: [
+                    "4,0 A",
+                    "3,5 A",
+                    "4,5 A",
+                    "2,0 A",
+                    "5,0 A"
+                ],
+                correctIndex: 0,
+                explanation: "Menurut Hukum I Kirchhoff: ΣI<sub>masuk</sub> = ΣI<sub>keluar</sub><br>I₁ + I₂ = I₃ + I₄ + I₅<br>5 + 3 = 2,5 + 1,5 + I₅ → 8 = 4 + I₅ → I₅ = 4,0 A."
+            },
+            {
+                id: 17,
+                difficulty: "Sedang",
+                levelKey: "medium",
+                topic: "Jembatan Wheatstone Sederhana",
+                question: "Pada rangkaian jembatan Wheatstone, diketahui R₁ = 4 Ω, R₂ = 6 Ω, R₃ = 8 Ω, dan R₄ = 12 Ω, sementara resistor tengah R₅ = 20 Ω terhubung pada galvanometer. Karena R₁·R₄ = R₂·R₃, maka hambatan pengganti total antara ujung masuk dan keluar jembatan adalah...",
+                options: [
+                    "7,2 Ω",
+                    "30 Ω",
+                    "10 Ω",
+                    "18 Ω",
+                    "5,0 Ω"
+                ],
+                correctIndex: 0,
+                explanation: "Karena R₁ × R₄ (4 × 12 = 48) sama dengan R₂ × R₃ (6 × 8 = 48), jembatan dalam keadaan SEIMBANG sehingga tidak ada arus yang melewati R₅ (R₅ dapat diabaikan).<br>• Cabang atas (seri): R<sub>atas</sub> = R₁ + R₂ = 4 + 6 = 10 Ω.<br>• Cabang bawah (seri): R<sub>bawah</sub> = R₃ + R₄ = 8 + 12 = 20 Ω.<br>• Paralelkan kedua cabang: R<sub>total</sub> = (10 × 20) / (10 + 20) = 200 / 30 = 6,67 Ω? Periksa kembali pasangan seri: R₁ dan R₃ di satu sisi (4 + 8 = 12 Ω) paralel dengan R₂ dan R₄ (6 + 12 = 18 Ω) → R<sub>total</sub> = (12 × 18) / (12 + 18) = 216 / 30 = 7,2 Ω."
+            },
+            {
+                id: 18,
+                difficulty: "Sedang",
+                levelKey: "medium",
+                topic: "Daya & Energi Listrik Rumah Tangga",
+                question: "Sebuah pemanas air listrik memiliki spesifikasi 400 W / 220 V digunakan selama 2,5 jam setiap hari. Jika tarif dasar listrik adalah Rp1.500,00 per kWh, maka biaya pemakaian energi listrik khusus untuk pemanas air tersebut selama 30 hari adalah...",
+                options: [
+                    "Rp45.000,00",
+                    "Rp30.000,00",
+                    "Rp60.000,00",
+                    "Rp15.000,00",
+                    "Rp90.000,00"
+                ],
+                correctIndex: 0,
+                explanation: "Daya P = 400 W = 0,4 kW.<br>Energi per hari = 0,4 kW × 2,5 jam = 1 kWh.<br>Energi selama 30 hari = 1 kWh × 30 = 30 kWh.<br>Biaya total = 30 kWh × Rp1.500 = Rp45.000,00."
+            },
+            {
+                id: 19,
+                difficulty: "Sedang",
+                levelKey: "medium",
+                topic: "GGL dan Tegangan Jepit Baterai",
+                question: "Sebuah baterai memiliki gaya gerak listrik (GGL) 12 V dan hambatan dalam 0,5 Ω dihubungkan dengan sebuah resistor luar R = 5,5 Ω. Besar tegangan jepit baterai saat rangkaian tertutup adalah...",
+                options: [
+                    "11,0 V",
+                    "12,0 V",
+                    "10,0 V",
+                    "11,5 V",
+                    "6,0 V"
+                ],
+                correctIndex: 0,
+                explanation: "Kuat arus rangkaian: I = ε / (R + r) = 12 / (5,5 + 0,5) = 12 / 6 = 2 A.<br>Tegangan jepit: V<sub>jepit</sub> = I × R = 2 × 5,5 = 11,0 V (atau V<sub>jepit</sub> = ε − I·r = 12 − 2(0,5) = 11,0 V)."
+            },
+            {
+                id: 20,
+                difficulty: "Sedang",
+                levelKey: "medium",
+                topic: "Energi Tersimpan pada Kapasitor",
+                question: "Sebuah kapasitor 40 μF diberi muatan hingga beda potensial antar kepingnya mencapai 100 V. Besar energi potensial listrik yang tersimpan di dalam kapasitor tersebut adalah...",
+                options: [
+                    "0,20 J",
+                    "0,40 J",
+                    "2,00 J",
+                    "0,02 J",
+                    "4,00 J"
+                ],
+                correctIndex: 0,
+                explanation: "Energi kapasitor: W = ½ · C · V² = 0,5 × (40 × 10<sup>-6</sup>) × (100)² = 20 × 10<sup>-6</sup> × 10<sup>4</sup> = 0,20 Joule."
+            },
+
+            // ==================== LEVEL SULIT / HOTS (NO. 21 - 30) ====================
+            {
+                id: 21,
+                difficulty: "Sulit (HOTS)",
+                levelKey: "hard",
+                topic: "Keseimbangan Bola Bermuatan pada Tali",
+                question: "Dua buah bola kecil identik masing-masing bermassa 0,3 gram digantung pada seutas tali ringan dari titik yang sama. Kedua bola diberi muatan listrik sama besar dan sejenis sehingga saling tolak-menolak dan berada dalam keadaan setimbang ketika masing-masing tali membentuk sudut 37° terhadap garis vertikal (tan 37° = ¾, g = 10 m/s²). Besar gaya tolak Coulomb yang dialami masing-masing bola adalah...",
+                options: [
+                    "2,25 × 10<sup>-3</sup> N",
+                    "3,00 × 10<sup>-3</sup> N",
+                    "4,00 × 10<sup>-3</sup> N",
+                    "1,80 × 10<sup>-3</sup> N",
+                    "2,40 × 10<sup>-3</sup> N"
+                ],
+                correctIndex: 0,
+                explanation: "Massa bola m = 0,3 gram = 0,3 × 10<sup>-3</sup> kg = 3 × 10<sup>-4</sup> kg.<br>Gaya berat w = m · g = 3 × 10<sup>-4</sup> × 10 = 3 × 10<sup>-3</sup> N.<br>Pada keadaan setimbang, komponen gaya memenuhi: tan θ = F<sub>Coulomb</sub> / w.<br>F<sub>Coulomb</sub> = w · tan 37° = (3 × 10<sup>-3</sup>) × (3/4) = 2,25 × 10<sup>-3</sup> N."
+            },
+            {
+                id: 22,
+                difficulty: "Sulit (HOTS)",
+                levelKey: "hard",
+                topic: "Kapasitor & Dielektrik (Terputus dari Baterai)",
+                question: "Sebuah kapasitor keping sejajar berisi udara memiliki kapasitas C₀ dan dihubungkan dengan baterai bertegangan V₀ hingga muatannya penuh sebesar Q₀ dengan energi tersimpan W₀. Setelah itu, <strong>baterai dilepas dari kapasitor</strong>, lalu ruang di antara kedua keping diisi penuh bahan dielektrik dengan konstanta dielektrik κ = 4. Besar beda potensial dan energi kapasitor sekarang berturut-turut adalah...",
+                options: [
+                    "¼ V₀ dan ¼ W₀",
+                    "4 V₀ dan 4 W₀",
+                    "V₀ dan 4 W₀",
+                    "¼ V₀ dan 4 W₀",
+                    "V₀ dan ¼ W₀"
+                ],
+                correctIndex: 0,
+                explanation: "Karena baterai DILEPAS (rangkaian terbuka), muatan kapasitor tetap konstan (Q' = Q₀).<br>1) Kapasitas baru: C' = κ · C₀ = 4C₀.<br>2) Tegangan baru: V' = Q' / C' = Q₀ / (4C₀) = ¼ V₀.<br>3) Energi baru: W' = Q'² / (2C') = Q₀² / (2 · 4C₀) = ¼ W₀."
+            },
+            {
+                id: 23,
+                difficulty: "Sulit (HOTS)",
+                levelKey: "hard",
+                topic: "Kapasitor & Dielektrik (Tetap Terhubung Baterai)",
+                question: "Sebuah kapasitor keping sejajar dengan dielektrik udara berkapasitas 5 μF dihubungkan terus-menerus pada sumber tegangan tetap 100 V. Ketika ke dalam ruang antar keping disisipkan bahan dielektrik dengan konstanta dielektrik κ = 3 (baterai tetap terhubung), maka pertambahan energi listrik yang tersimpan dalam kapasitor adalah...",
+                options: [
+                    "0,050 J",
+                    "0,025 J",
+                    "0,075 J",
+                    "0,100 J",
+                    "0,015 J"
+                ],
+                correctIndex: 0,
+                explanation: "Karena baterai TETAP TERHUBUNG, tegangan V = 100 V konstan.<br>• Energi awal: W₁ = ½ · C₀ · V² = 0,5 × (5 × 10<sup>-6</sup>) × 100² = 0,025 J.<br>• Kapasitas akhir: C₂ = κ · C₀ = 3 × 5 μF = 15 μF.<br>• Energi akhir: W₂ = ½ · C₂ · V² = 0,5 × (15 × 10<sup>-6</sup>) × 100² = 0,075 J.<br>• Pertambahan energi: ΔW = W₂ − W₁ = 0,075 − 0,025 = 0,050 J."
+            },
+            {
+                id: 24,
+                difficulty: "Sulit (HOTS)",
+                levelKey: "hard",
+                topic: "Hukum II Kirchhoff (Rangkaian Dua Loop)",
+                question: "Perhatikan rangkaian dua loop tertutup dengan cabang tengah bersama: Loop kiri berisi sumber GGL ε₁ = 12 V dan resistor R₁ = 4 Ω; cabang tengah berisi resistor R₂ = 2 Ω; dan loop kanan berisi sumber GGL ε₂ = 6 V dan resistor R₃ = 4 Ω. Kedua sumber GGL dipasang sedemikian rupa sehingga kutub positif keduanya sama-sama menghadap ke atas menuju simpul atas cabang tengah. Besar kuat arus yang mengalir melalui resistor tengah R₂ adalah...",
+                options: [
+                    "2,25 A",
+                    "1,50 A",
+                    "0,75 A",
+                    "3,00 A",
+                    "1,00 A"
+                ],
+                correctIndex: 0,
+                explanation: "Misalkan arus dari loop kiri I₁ dan dari loop kanan I₂ masuk ke simpul atas sehingga arus pada cabang tengah I₃ = I₁ + I₂ ke bawah.<br>• Loop kiri: −12 + 4I₁ + 2(I₁ + I₂) = 0 → 6I₁ + 2I₂ = 12 → 3I₁ + I₂ = 6 ... (1)<br>• Loop kanan: −6 + 4I₂ + 2(I₁ + I₂) = 0 → 2I₁ + 6I₂ = 6 → I₁ + 3I₂ = 3 ... (2)<br>Dari (1): I₂ = 6 − 3I₁. Substitusi ke (2): I₁ + 3(6 − 3I₁) = 3 → −8I₁ = −15 → I₁ = 1,875 A, dan I₂ = 6 − 5,625 = 0,375 A.<br>Maka arus di cabang tengah I₃ = I₁ + I₂ = 1,875 + 0,375 = 2,25 A."
+            },
+            {
+                id: 25,
+                difficulty: "Sulit (HOTS)",
+                levelKey: "hard",
+                topic: "Perubahan Daya Lampu pada Tegangan Berbeda",
+                question: "Dua buah lampu pijar masing-masing bertuliskan L₁ (40 W / 220 V) dan L₂ (60 W / 220 V) dihubungkan secara <strong>seri</strong> pada sumber tegangan DC 220 V. Daya total yang diserap oleh kedua lampu tersebut adalah...",
+                options: [
+                    "24 W",
+                    "100 W",
+                    "50 W",
+                    "48 W",
+                    "12 W"
+                ],
+                correctIndex: 0,
+                explanation: "Karena kedua lampu memiliki tegangan spesifikasi sama (220 V) dan dipasang seri pada sumber yang juga 220 V, berlaku rumus cepat daya seri:<br>1 / P<sub>total</sub> = 1 / P₁ + 1 / P₂ = 1/40 + 1/60 = (3 + 2) / 120 = 5 / 120.<br>Maka P<sub>total</sub> = 120 / 5 = 24 Watt."
+            },
+            {
+                id: 26,
+                difficulty: "Sulit (HOTS)",
+                levelKey: "hard",
+                topic: "Perbandingan Terang Lampu Seri vs Paralel",
+                question: "Dua buah lampu identik X dan Y masing-masing berspesifikasi 100 W / 220 V. Pada percobaan pertama, kedua lampu dirangkai paralel pada tegangan 110 V. Pada percobaan kedua, kedua lampu dirangkai seri pada tegangan 220 V. Perbandingan daya total yang diserap pada percobaan pertama terhadap percobaan kedua adalah...",
+                options: [
+                    "1 : 1",
+                    "2 : 1",
+                    "4 : 1",
+                    "1 : 2",
+                    "1 : 4"
+                ],
+                correctIndex: 0,
+                explanation: "• Percobaan 1 (Paralel pada 110 V): Masing-masing lampu menerima tegangan 110 V (setengah dari 220 V). Daya tiap lampu P₁ = (110/220)² × 100 = ¼ × 100 = 25 W. Untuk 2 lampu paralel: P<sub>total,1</sub> = 25 + 25 = 50 W.<br>• Percobaan 2 (Seri pada 220 V): Masing-masing lampu identik juga membagi tegangan sama rata (110 V per lampu), sehingga P<sub>total,2</sub> = (100 × 100) / (100 + 100) = 50 W.<br>Perbandingan P<sub>total,1</sub> : P<sub>total,2</sub> = 50 : 50 = 1 : 1."
+            },
+            {
+                id: 27,
+                difficulty: "Sulit (HOTS)",
+                levelKey: "hard",
+                topic: "Rangkaian Campuran dengan Hambatan Dalam",
+                question: "Sebuah baterai ber-GGL 15 V dan hambatan dalam 1 Ω dihubungkan dengan rangkaian campuran yang terdiri dari resistor R₁ = 2 Ω yang diserikan dengan susunan paralel R₂ = 6 Ω dan R₃ = 3 Ω. Besar daya listrik yang terdisipasi pada resistor R₂ (6 Ω) adalah...",
+                options: [
+                    "6,0 W",
+                    "12,0 W",
+                    "9,0 W",
+                    "18,0 W",
+                    "3,0 W"
+                ],
+                correctIndex: 0,
+                explanation: "1) Hambatan paralel R₂ dan R₃: R<sub>p</sub> = (6 × 3) / (6 + 3) = 2 Ω.<br>2) Hambatan total rangkaian termasuk hambatan dalam: R<sub>total</sub> = R₁ + R<sub>p</sub> + r = 2 + 2 + 1 = 5 Ω.<br>3) Arus utama: I = ε / R<sub>total</sub> = 15 / 5 = 3 A.<br>4) Tegangan pada susunan paralel: V<sub>p</sub> = I × R<sub>p</sub> = 3 × 2 = 6 V.<br>5) Daya pada R₂ (6 Ω): P₂ = V<sub>p</sub>² / R₂ = 6² / 6 = 36 / 6 = 6,0 Watt."
+            },
+            {
+                id: 28,
+                difficulty: "Sulit (HOTS)",
+                levelKey: "hard",
+                topic: "Pembagian Muatan Dua Kapasitor Dihubungkan",
+                question: "Kapasitor C₁ = 4 μF dimuati oleh baterai 60 V, sedangkan kapasitor C₂ = 8 μF dimuati oleh baterai 30 V. Setelah keduanya dilepas dari baterai masing-masing, kutub-kutub yang sejenis dari kedua kapasitor tersebut dihubungkan satu sama lain. Beda potensial gabungan kedua kapasitor setelah mencapai kesetimbangan adalah...",
+                options: [
+                    "40 V",
+                    "45 V",
+                    "30 V",
+                    "50 V",
+                    "20 V"
+                ],
+                correctIndex: 0,
+                explanation: "Muatan awal masing-masing kapasitor:<br>• Q₁ = C₁ · V₁ = 4 μF × 60 V = 240 μC.<br>• Q₂ = C₂ · V₂ = 8 μF × 30 V = 240 μC.<br>Karena kutub sejenis dihubungkan paralel, muatan total Q<sub>total</sub> = Q₁ + Q₂ = 240 + 240 = 480 μC, dan kapasitas total C<sub>total</sub> = C₁ + C₂ = 4 + 8 = 12 μF.<br>Beda potensial gabungan: V<sub>gab</sub> = Q<sub>total</sub> / C<sub>total</sub> = 480 / 12 = 40 V."
+            },
+            {
+                id: 29,
+                difficulty: "Sulit (HOTS)",
+                levelKey: "hard",
+                topic: "Daya Maksimum pada Hambatan Luar",
+                question: "Sebuah sumber tegangan DC memiliki GGL 24 V dan hambatan dalam r = 3 Ω dihubungkan dengan sebuah resistor variabel R. Nilai hambatan luar R agar daya yang diserap oleh resistor R mencapai nilai maksimum dan besar daya maksimum tersebut berturut-turut adalah...",
+                options: [
+                    "3 Ω dan 48 W",
+                    "3 Ω dan 96 W",
+                    "6 Ω dan 32 W",
+                    "1,5 Ω dan 48 W",
+                    "3 Ω dan 24 W"
+                ],
+                correctIndex: 0,
+                explanation: "Teorema Transfer Daya Maksimum menyatakan bahwa daya pada beban luar R akan maksimum jika R = r = 3 Ω.<br>Saat R = 3 Ω, arus I = ε / (R + r) = 24 / (3 + 3) = 4 A.<br>Daya maksimum P<sub>maks</sub> = I² · R = 4² × 3 = 16 × 3 = 48 Watt."
+            },
+            {
+                id: 30,
+                difficulty: "Sulit (HOTS)",
+                levelKey: "hard",
+                topic: "Gerak Elektron dalam Medan Listrik Homogen",
+                question: "Sebuah elektron (m = 9 × 10<sup>-31</sup> kg, q = −1,6 × 10<sup>-19</sup> C) dilepaskan dari keadaan diam pada keping negatif menuju keping positif dalam ruang hampa di antara dua keping sejajar yang terpisah sejauh 4 cm dengan beda potensial 180 V. Kelajuan elektron tepat saat menumbuk keping positif adalah...",
+                options: [
+                    "8 × 10<sup>6</sup> m/s",
+                    "4 × 10<sup>6</sup> m/s",
+                    "6 × 10<sup>6</sup> m/s",
+                    "2 × 10<sup>6</sup> m/s",
+                    "1,6 × 10<sup>7</sup> m/s"
+                ],
+                correctIndex: 0,
+                explanation: "Gunakan Hukum Kekekalan Energi Mekanik (perubahan energi potensial listrik berubah menjadi energi kinetik):<br>q · ΔV = ½ · m · v²<br>v = √(2 · q · ΔV / m) = √(2 × 1,6 × 10<sup>-19</sup> × 180 / (9 × 10<sup>-31</sup>))<br>v = √(2 × 1,6 × 20 × 10<sup>12</sup>) = √(64 × 10<sup>12</sup>) = 8 × 10<sup>6</sup> m/s."
+            }
+        ];
+
+        // =========================================================================
+        // 2. STATE APLIKASI UJIAN
+        // =========================================================================
+        let examState = {
+            studentName: "",
+            studentClass: "",
+            studentAbsen: "",
+            questions: [],          // Array soal terproses
+            answers: {},            // { questionIndex: selectedOptionIndex }
+            doubts: {},             // { questionIndex: boolean }
+            currentIndex: 0,
+            timeRemaining: 90 * 60, // 90 menit dalam detik
+            timerInterval: null,
+            isActive: false,
+            isFinished: false,
+            violations: 0,
+            maxViolations: 3,
+            violationLogs: [],
+            violationCooldown: false
+        };
+
+        // =========================================================================
+        // 3. INISIALISASI & MULAI UJIAN
+        // =========================================================================
+        document.getElementById('start-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('student-name').value.trim();
+            const cls = document.getElementById('student-class').value.trim();
+            const absen = document.getElementById('student-absen').value.trim();
+            const shuffleOpts = document.getElementById('shuffle-options').checked;
+            const shuffleQs = document.getElementById('shuffle-questions').checked;
+
+            if (!name || !cls || !absen) return;
+
+            examState.studentName = name;
+            examState.studentClass = cls;
+            examState.studentAbsen = absen;
+
+            // Persiapkan soal & pengacakan opsi yang konsisten
+            prepareQuestions(shuffleQs, shuffleOpts);
+
+            // Masuk Fullscreen API
+            requestFullscreenMode();
+
+            // Tampilkan layar ujian
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('exam-screen').classList.remove('hidden');
+            document.getElementById('nav-student-info').textContent = `${name} (${cls} • Absen ${absen})`;
+
+            examState.isActive = true;
+            renderQuestionGrid();
+            renderCurrentQuestion();
+            startTimer();
+        });
+
+        function prepareQuestions(shuffleQs, shuffleOpts) {
+            let qList = RAW_QUESTIONS.map((q, idx) => {
+                let mappedOpts = q.options.map((text, optIdx) => ({
+                    text: text,
+                    isCorrect: optIdx === q.correctIndex
+                }));
+
+                if (shuffleOpts) {
+                    mappedOpts = shuffleArray(mappedOpts);
+                }
+
+                const newCorrectIdx = mappedOpts.findIndex(o => o.isCorrect);
+
+                return {
+                    ...q,
+                    originalNumber: idx + 1,
+                    processedOptions: mappedOpts.map(o => o.text),
+                    processedCorrectIndex: newCorrectIdx
+                };
+            });
+
+            if (shuffleQs) {
+                qList = shuffleArray(qList);
+            }
+
+            examState.questions = qList;
+        }
+
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        // =========================================================================
+        // 4. SISTEM ANTI-KECURANGAN KETAT (STRICT ANTI-CHEAT)
+        // =========================================================================
+        function requestFullscreenMode() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(() => {});
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
+        function playWarningBeep() {
+            try {
+                if (typeof Tone !== 'undefined') {
+                    Tone.start();
+                    const synth = new Tone.Synth().toDestination();
+                    synth.triggerAttackRelease("A5", "16n");
+                    setTimeout(() => synth.triggerAttackRelease("E5", "8n"), 120);
+                }
+            } catch (err) {
+                // Abaikan jika browser memblokir audio otomatis
+            }
+        }
+
+        function recordViolation(reason) {
+            if (!examState.isActive || examState.isFinished || examState.violationCooldown) return;
+
+            // Cooldown 1.5 detik agar event blur & visibilitychange bersamaan tidak terhitung ganda
+            examState.violationCooldown = true;
+            setTimeout(() => { examState.violationCooldown = false; }, 1500);
+
+            examState.violations++;
+            const now = new Date().toLocaleTimeString('id-ID');
+            examState.violationLogs.push(`[${now}] Pelanggaran #${examState.violations}: ${reason}`);
+
+            // Update Badge di Navbar
+            const strikeCountEl = document.getElementById('strike-count');
+            const strikeBadgeEl = document.getElementById('strike-badge');
+            strikeCountEl.textContent = examState.violations;
+            strikeBadgeEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-600 text-white text-xs sm:text-sm font-bold animate-pulse";
+
+            playWarningBeep();
+
+            // Jika mencapai batas 3 kali -> Auto Submit Paksa
+            if (examState.violations >= examState.maxViolations) {
+                document.getElementById('violation-modal').classList.add('hidden');
+                finishExam('DISQUALIFIED');
+                return;
+            }
+
+            // Tampilkan modal peringatan keras pada pelanggaran ke-1 dan ke-2
+            document.getElementById('modal-strike-num').textContent = examState.violations;
+            document.getElementById('violation-reason-text').textContent = reason;
+            document.getElementById('violation-modal').classList.remove('hidden');
+        }
+
+        function acknowledgeViolation() {
+            document.getElementById('violation-modal').classList.add('hidden');
+            requestFullscreenMode();
+        }
+
+        // 1) Deteksi keluar dari Fullscreen
+        document.addEventListener('fullscreenchange', () => {
+            if (examState.isActive && !examState.isFinished && !document.fullscreenElement) {
+                recordViolation("Keluar dari Mode Layar Penuh (Fullscreen).");
+            }
+        });
+
+        // 2) Deteksi pindah tab (Page Visibility API)
+        document.addEventListener('visibilitychange', () => {
+            if (examState.isActive && !examState.isFinished && document.hidden) {
+                recordViolation("Berpindah tab browser atau meminimalkan jendela ujian.");
+            }
+        });
+
+        // 3) Deteksi kehilangan fokus jendela (Alt+Tab / klik jendela lain)
+        window.addEventListener('blur', () => {
+            if (examState.isActive && !examState.isFinished) {
+                recordViolation("Jendela ujian kehilangan fokus (membuka aplikasi atau jendela lain).");
+            }
+        });
+
+        // 4) Blokir Klik Kanan
+        document.addEventListener('contextmenu', (e) => {
+            if (examState.isActive && !examState.isFinished) {
+                e.preventDefault();
+                showInfoModal("Klik Kanan Diblokir", "Menu klik kanan dinonaktifkan selama ujian berlangsung.");
+            }
+        });
+
+        // 5) Blokir Copy, Cut, Paste, Drag-Drop
+        ['copy', 'cut', 'paste', 'dragstart', 'drop'].forEach(evt => {
+            document.addEventListener(evt, (e) => {
+                if (examState.isActive && !examState.isFinished) {
+                    e.preventDefault();
+                    if (['copy', 'cut', 'paste'].includes(evt)) {
+                        showInfoModal("Tindakan Diblokir", "Fungsi salin/tempel (Copy/Cut/Paste) dilarang keras selama ujian.");
+                    }
+                }
+            });
+        });
+
+        // 6) Blokir Keyboard Shortcuts (F12, Ctrl+Shift+I/J/C, Ctrl+U/S/P/C/V/X, PrintScreen)
+        document.addEventListener('keydown', (e) => {
+            if (!examState.isActive || examState.isFinished) return;
+
+            // F12 atau Ctrl+Shift+I/J/C (DevTools)
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C', 'i', 'j', 'c'].includes(e.key))) {
+                e.preventDefault();
+                recordViolation("Mencoba membuka Developer Tools (F12 / Inspect Element).");
+                return;
+            }
+
+            // Ctrl + C, V, X, U, S, P, A
+            if (e.ctrlKey && ['c', 'v', 'x', 'u', 's', 'p', 'a', 'C', 'V', 'X', 'U', 'S', 'P', 'A'].includes(e.key)) {
+                e.preventDefault();
+                showInfoModal("Pintasan Keyboard Diblokir", `Kombinasi tombol Ctrl+${e.key.toUpperCase()} tidak diizinkan selama ujian.`);
+                return;
+            }
+
+            // PrintScreen
+            if (e.key === 'PrintScreen') {
+                e.preventDefault();
+                recordViolation("Mencoba mengambil tangkapan layar (PrintScreen).");
+            }
+        });
+
+        // =========================================================================
+        // 5. TIMER UJIAN (90 MENIT)
+        // =========================================================================
+        function startTimer() {
+            updateTimerDisplay();
+            examState.timerInterval = setInterval(() => {
+                if (examState.isFinished) {
+                    clearInterval(examState.timerInterval);
+                    return;
+                }
+
+                examState.timeRemaining--;
+                updateTimerDisplay();
+
+                if (examState.timeRemaining <= 0) {
+                    clearInterval(examState.timerInterval);
+                    finishExam('TIMEOUT');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(examState.timeRemaining / 60);
+            const secs = examState.timeRemaining % 60;
+            const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            const timerEl = document.getElementById('timer-display');
+            const timerBox = document.getElementById('timer-box');
+
+            timerEl.textContent = formatted;
+
+            // Peringatan visual jika sisa waktu <= 5 menit
+            if (examState.timeRemaining <= 300) {
+                timerBox.className = "flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-red-900 border border-red-500 font-mono text-base sm:text-lg font-bold text-red-200 animate-pulse";
+            }
+        }
+
+        // =========================================================================
+        // 6. RENDER SOAL & NAVIGASI
+        // =========================================================================
+        function renderCurrentQuestion() {
+            const idx = examState.currentIndex;
+            const q = examState.questions[idx];
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+
+            document.getElementById('current-q-num').textContent = idx + 1;
+            document.getElementById('topic-badge').textContent = q.topic;
+
+            // Badge Tingkat Kesulitan
+            const diffBadge = document.getElementById('difficulty-badge');
+            diffBadge.textContent = q.difficulty;
+            if (q.levelKey === "easy") {
+                diffBadge.className = "px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide bg-emerald-100 text-emerald-800";
+            } else if (q.levelKey === "medium") {
+                diffBadge.className = "px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide bg-amber-100 text-amber-800";
+            } else {
+                diffBadge.className = "px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide bg-rose-100 text-rose-800";
+            }
+
+            // Teks Pertanyaan
+            document.getElementById('question-text').innerHTML = q.question;
+
+            // Pilihan Jawaban
+            const optsContainer = document.getElementById('options-container');
+            optsContainer.innerHTML = '';
+
+            q.processedOptions.forEach((optText, optIdx) => {
+                const isSelected = examState.answers[idx] === optIdx;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => selectAnswer(optIdx);
+
+                btn.className = isSelected
+                    ? "w-full text-left p-4 rounded-xl border-2 border-blue-700 bg-blue-50/90 flex items-start gap-3.5 transition shadow-sm"
+                    : "w-full text-left p-4 rounded-xl border border-slate-200 hover:border-blue-400 hover:bg-slate-50 flex items-start gap-3.5 transition";
+
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm shrink-0 ${isSelected ? 'bg-blue-700 text-white' : 'bg-slate-100 text-slate-700'}">
+                        ${letters[optIdx]}
+                    </span>
+                    <span class="text-sm sm:text-base text-slate-800 pt-1 leading-relaxed">${optText}</span>
+                `;
+                optsContainer.appendChild(btn);
+            });
+
+            // Status Ragu-Ragu
+            const isDoubt = !!examState.doubts[idx];
+            const doubtIcon = document.getElementById('doubt-checkbox-icon');
+            if (isDoubt) {
+                doubtIcon.innerHTML = `<svg class="w-3.5 h-3.5 text-amber-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>`;
+            } else {
+                doubtIcon.innerHTML = '';
+            }
+
+            // Tombol Prev / Next
+            document.getElementById('btn-prev').disabled = idx === 0;
+            const btnNext = document.getElementById('btn-next');
+            if (idx === examState.questions.length - 1) {
+                btnNext.innerHTML = `Selesai & Kumpulkan <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`;
+                btnNext.className = "px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm flex items-center gap-1.5 transition";
+                btnNext.onclick = openConfirmSubmitModal;
+            } else {
+                btnNext.innerHTML = `Selanjutnya <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>`;
+                btnNext.className = "px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-semibold text-sm flex items-center gap-1.5 transition";
+                btnNext.onclick = nextQuestion;
+            }
+
+            renderQuestionGrid();
+        }
+
+        function selectAnswer(optIdx) {
+            examState.answers[examState.currentIndex] = optIdx;
+            updateAnsweredCounter();
+            renderCurrentQuestion();
+        }
+
+        function toggleDoubt() {
+            const idx = examState.currentIndex;
+            examState.doubts[idx] = !examState.doubts[idx];
+            renderCurrentQuestion();
+        }
+
+        function prevQuestion() {
+            if (examState.currentIndex > 0) {
+                examState.currentIndex--;
+                renderCurrentQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (examState.currentIndex < examState.questions.length - 1) {
+                examState.currentIndex++;
+                renderCurrentQuestion();
+            }
+        }
+
+        function jumpToQuestion(idx) {
+            examState.currentIndex = idx;
+            renderCurrentQuestion();
+        }
+
+        function updateAnsweredCounter() {
+            const count = Object.keys(examState.answers).length;
+            document.getElementById('answered-counter').textContent = count;
+        }
+
+        function renderQuestionGrid() {
+            const grid = document.getElementById('question-grid');
+            grid.innerHTML = '';
+
+            examState.questions.forEach((_, idx) => {
+                const isCurrent = idx === examState.currentIndex;
+                const isAnswered = examState.answers[idx] !== undefined;
+                const isDoubt = !!examState.doubts[idx];
+
+                let classes = "h-10 rounded-xl font-bold text-xs flex items-center justify-center transition ";
+
+                if (isDoubt) {
+                    classes += "bg-amber-400 text-amber-950 ";
+                } else if (isAnswered) {
+                    classes += "bg-emerald-600 text-white ";
+                } else {
+                    classes += "bg-slate-100 text-slate-700 border border-slate-300 hover:bg-slate-200 ";
+                }
+
+                if (isCurrent) {
+                    classes += "ring-2 ring-offset-2 ring-blue-600 scale-105 ";
+                }
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = classes;
+                btn.textContent = idx + 1;
+                btn.onclick = () => jumpToQuestion(idx);
+                grid.appendChild(btn);
+            });
+        }
+
+        // =========================================================================
+        // 7. KONFIRMASI & PENYELESAIAN UJIAN
+        // =========================================================================
+        function openConfirmSubmitModal() {
+            const total = examState.questions.length;
+            const answered = Object.keys(examState.answers).length;
+            const doubtCount = Object.values(examState.doubts).filter(Boolean).length;
+            const unanswered = total - answered;
+
+            const warnBox = document.getElementById('unanswered-warning');
+            if (unanswered > 0 || doubtCount > 0) {
+                warnBox.classList.remove('hidden');
+                document.getElementById('modal-unanswered-count').textContent = `${unanswered} belum dijawab, ${doubtCount} ragu-ragu`;
+            } else {
+                warnBox.classList.add('hidden');
+            }
+
+            document.getElementById('confirm-submit-modal').classList.remove('hidden');
+        }
+
+        function closeConfirmSubmitModal() {
+            document.getElementById('confirm-submit-modal').classList.add('hidden');
+        }
+
+        function getPredicate(score) {
+            if (score >= 90) return "Sangat Baik (A)";
+            if (score >= 80) return "Baik (B)";
+            if (score >= 75) return "Tuntas / Cukup (C)";
+            return "Perlu Remedial";
+        }
+
+        function finishExam(reason) {
+            if (examState.isFinished) return;
+            examState.isFinished = true;
+            examState.isActive = false;
+            clearInterval(examState.timerInterval);
+
+            // Tutup modal yang mungkin terbuka
+            document.getElementById('confirm-submit-modal').classList.add('hidden');
+            document.getElementById('violation-modal').classList.add('hidden');
+
+            // Keluar dari fullscreen secara aman
+            if (document.fullscreenElement && document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            }
+
+            // Hitung Skor & Statistik per Level
+            let correctCount = 0;
+            let wrongCount = 0;
+            let emptyCount = 0;
+            let easyCorrect = 0;
+            let mediumCorrect = 0;
+            let hardCorrect = 0;
+
+            examState.questions.forEach((q, idx) => {
+                const userAns = examState.answers[idx];
+                if (userAns === undefined) {
+                    emptyCount++;
+                } else if (userAns === q.processedCorrectIndex) {
+                    correctCount++;
+                    if (q.levelKey === 'easy') easyCorrect++;
+                    else if (q.levelKey === 'medium') mediumCorrect++;
+                    else if (q.levelKey === 'hard') hardCorrect++;
+                } else {
+                    wrongCount++;
+                }
+            });
+
+            const score = Math.round((correctCount / examState.questions.length) * 100);
+
+            // Tampilkan Layar Hasil
+            document.getElementById('exam-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            // Isi Data Siswa & Skor
+            document.getElementById('res-name').textContent = examState.studentName;
+            document.getElementById('res-class-absen').textContent = `${examState.studentClass} / Absen ${examState.studentAbsen}`;
+            document.getElementById('res-time').textContent = new Date().toLocaleString('id-ID', {
+                day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('final-predicate').textContent = `Predikat: ${getPredicate(score)}`;
+            document.getElementById('res-correct').textContent = correctCount;
+            document.getElementById('res-wrong').textContent = wrongCount;
+            document.getElementById('res-empty').textContent = emptyCount;
+            document.getElementById('res-violations').textContent = examState.violations;
+
+            // Statistik Per Level
+            document.getElementById('lvl-easy-score').textContent = easyCorrect;
+            document.getElementById('lvl-medium-score').textContent = mediumCorrect;
+            document.getElementById('lvl-hard-score').textContent = hardCorrect;
+
+            // Status Ujian
+            const statusText = document.getElementById('result-status-text');
+            const headerBanner = document.getElementById('result-header-banner');
+
+            if (reason === 'DISQUALIFIED') {
+                statusText.textContent = "Terkunci Otomatis (3× Pelanggaran)";
+                statusText.className = "font-bold text-red-700";
+                headerBanner.className = "bg-gradient-to-r from-red-950 via-red-900 to-slate-900 p-6 sm:p-8 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4";
+            } else if (reason === 'TIMEOUT') {
+                statusText.textContent = "Selesai (Waktu Habis)";
+                statusText.className = "font-bold text-amber-700";
+            } else {
+                statusText.textContent = "Tuntas & Terverifikasi";
+                statusText.className = "font-bold text-emerald-700";
+            }
+
+            // Log Pelanggaran
+            const logList = document.getElementById('violation-log-list');
+            if (examState.violationLogs.length > 0) {
+                logList.innerHTML = examState.violationLogs.map(log => `<p class="text-red-700 font-medium">⚠ ${log}</p>`).join('');
+            }
+
+            // Siapkan daftar pembahasan lengkap
+            renderSolutions();
+        }
+
+        // =========================================================================
+        // 8. RENDER KUNCI JAWABAN & PEMBAHASAN LENGKAP
+        // =========================================================================
+        function toggleSolutions() {
+            const sec = document.getElementById('solutions-section');
+            const btn = document.getElementById('btn-toggle-solutions');
+            sec.classList.toggle('hidden');
+            if (!sec.classList.contains('hidden')) {
+                btn.innerHTML = `Sembunyikan Kunci Jawaban & Pembahasan`;
+                sec.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                btn.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    Tampilkan Kunci Jawaban & Pembahasan Lengkap
+                `;
+            }
+        }
+
+        function renderSolutions() {
+            const container = document.getElementById('solutions-list');
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            container.innerHTML = '';
+
+            examState.questions.forEach((q, idx) => {
+                const userAns = examState.answers[idx];
+                const correctIdx = q.processedCorrectIndex;
+                const isCorrect = userAns === correctIdx;
+                const isEmpty = userAns === undefined;
+
+                let statusBadge = '';
+                let borderClass = '';
+                if (isEmpty) {
+                    statusBadge = `<span class="px-2.5 py-1 rounded-lg bg-slate-200 text-slate-700 text-xs font-bold">Kosong (Tidak Dijawab)</span>`;
+                    borderClass = "border-slate-300";
+                } else if (isCorrect) {
+                    statusBadge = `<span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-xs font-bold">✓ Benar</span>`;
+                    borderClass = "border-emerald-300";
+                } else {
+                    statusBadge = `<span class="px-2.5 py-1 rounded-lg bg-red-100 text-red-800 text-xs font-bold">✗ Salah</span>`;
+                    borderClass = "border-red-300";
+                }
+
+                const optionsHtml = q.processedOptions.map((optText, oIdx) => {
+                    let optStyle = "bg-slate-50 border-slate-200 text-slate-700";
+                    let tag = "";
+                    if (oIdx === correctIdx) {
+                        optStyle = "bg-emerald-50 border-emerald-500 text-emerald-900 font-semibold";
+                        tag = `<span class="ml-auto text-xs font-bold text-emerald-700">[Kunci Jawaban]</span>`;
+                    } else if (oIdx === userAns && !isCorrect) {
+                        optStyle = "bg-red-50 border-red-400 text-red-900";
+                        tag = `<span class="ml-auto text-xs font-bold text-red-700">[Jawaban Anda]</span>`;
+                    }
+
+                    return `
+                        <div class="p-3 rounded-xl border ${optStyle} flex items-center gap-2.5 text-sm">
+                            <span class="font-bold">${letters[oIdx]}.</span>
+                            <span>${optText}</span>
+                            ${tag}
+                        </div>
+                    `;
+                }).join('');
+
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-2xl border ${borderClass} p-5 sm:p-6 shadow-sm space-y-4 print-shadow-none print-break-inside-avoid`;
+                card.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="font-extrabold text-slate-900">Soal No. ${idx + 1} (${q.difficulty})</span>
+                            <span class="text-xs px-2.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">${q.topic}</span>
+                        </div>
+                        ${statusBadge}
+                    </div>
+                    <div class="text-slate-800 font-medium text-sm sm:text-base leading-relaxed">${q.question}</div>
+                    <div class="space-y-2">${optionsHtml}</div>
+                    <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-4 text-sm text-slate-800 leading-relaxed">
+                        <div class="font-bold text-blue-900 text-xs uppercase tracking-wider mb-1">Pembahasan Langkah demi Langkah:</div>
+                        <div>${q.explanation}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // =========================================================================
+        // 9. HELPER MODAL INFO
+        // =========================================================================
+        function showInfoModal(title, msg) {
+            document.getElementById('info-modal-title').textContent = title;
+            document.getElementById('info-modal-msg').textContent = msg;
+            document.getElementById('info-modal').classList.remove('hidden');
+        }
+
+        function closeInfoModal() {
+            document.getElementById('info-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
